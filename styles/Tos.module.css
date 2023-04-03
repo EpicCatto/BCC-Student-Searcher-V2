@@ -1,0 +1,12 @@
+
+.tos{
+    position: absolute;
+    top: 110px;
+    left: 10px;
+}
+
+.centeredX{
+    position: absolute;
+    left: 50%;
+    transform: translate3D(-50%, 0, 0)
+}

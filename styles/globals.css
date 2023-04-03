@@ -1,0 +1,23 @@
+*{
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+body {
+  color: #ffffff;
+  background-color: #222222;
+}
+
+.marquee{
+  font-size: 26px;
+  animation: marquee 10s linear infinite;
+}
+
+.center{
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
