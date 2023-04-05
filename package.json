@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@marsidev/react-turnstile": "^0.0.7",
+    "@marsidev/react-turnstile": "^0.1.0",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.1",
     "next": "13.2.1",
