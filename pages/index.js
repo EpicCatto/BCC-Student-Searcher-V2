@@ -1,13 +1,13 @@
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import { Turnstile } from '@marsidev/react-turnstile'
-import 'react-toastify/dist/ReactToastify.css';
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { Turnstile } from "@marsidev/react-turnstile";
+import "react-toastify/dist/ReactToastify.css";
 
-import styles from '../styles/Home.module.css';
-import config from '../../configuration'
-
+import styles from "../styles/Home.module.css";
+import config from "../../configuration";
+import Script from "next/script";
 
 export default function Home() {
   const router = useRouter();
@@ -15,8 +15,7 @@ export default function Home() {
   const ref = useRef(null);
 
   let [verifying, setVerifying] = useState(false);
-  let [cftunnel, setCftunnel] = useState('');
-
+  let [cftunnel, setCftunnel] = useState("");
 
   async function handleStartButton() {
     if (verifying) {
@@ -30,7 +29,7 @@ export default function Home() {
           if (res.status !== 200) {
             reject();
             setVerifying(false);
-            throw new Error('Error connecting to api service!');
+            throw new Error("Error connecting to api service!");
           }
           ref.current?.reset();
           // wait for the captcha to be solved
@@ -39,87 +38,88 @@ export default function Home() {
             const intervalTime = 100; // Time to wait between checking if cftunnel has a value
             let waitTime = 0;
             const intervalId = setInterval(() => {
-              if (cftunnel !== '') {
+              if (cftunnel !== "") {
                 clearInterval(intervalId);
                 resolve(cftunnel);
               } else if (waitTime >= maxWaitTime) {
                 clearInterval(intervalId);
-                reject(new Error('Timeout waiting for captcha to be solved'));
+                reject(new Error("Timeout waiting for captcha to be solved"));
               } else {
                 waitTime += intervalTime;
               }
             }, intervalTime);
           });
           // generate a new user and return the username and token if not already exist in the localstorage
-          const username = localStorage.getItem('username');
-          const storedToken = localStorage.getItem('token');
+          const username = localStorage.getItem("username");
+          const storedToken = localStorage.getItem("token");
           if (username === null || storedToken === null) {
             console.log(username, storedToken, token);
-            const response = await fetch(config.api_route+'/user/create?cftunnel=' + token);
+            const response = await fetch(
+              config.api_route + "/user/create?cftunnel=" + token
+            );
             console.log(response);
             if (response.status !== 200) {
               reject();
               setVerifying(false);
-              throw new Error('Error creating new user!');
+              throw new Error("Error creating new user!");
             }
             const data = await response.json();
-            localStorage.setItem('username', data.username);
-            localStorage.setItem('token', data.token);
+            localStorage.setItem("username", data.username);
+            localStorage.setItem("token", data.token);
           }
-  
+
           setTimeout(() => {
-            router.push('/search');
+            router.push("/search");
           }, 3000);
-  
+
           resolve();
-  
         } catch (error) {
-          toast.error('Error: ' + error.message, {
-            position: 'top-right',
+          toast.error("Error: " + error.message, {
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'colored',
+            theme: "colored",
           });
           reject();
           setVerifying(false);
         }
       }),
       {
-        pending: 'Checking api service...',
-        success: 'Api service is available redirecting to search page!',
-        error: 'Error connecting to api service!',
+        pending: "Checking api service...",
+        success: "Api service is available redirecting to search page!",
+        error: "Error connecting to api service!",
       },
       {
-        position: 'top-right',
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'colored',
-      },
+        theme: "colored",
+      }
     );
   }
-  
+
   function handleFAQButton() {
-    router.push('/terms');
+    router.push("/terms");
   }
 
   function handleRemoveButton() {
-    toast.error('This website is still in development please try again later', {
-      position: 'top-right',
+    toast.error("This website is still in development please try again later", {
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: 'colored',
+      theme: "colored",
     });
   }
 
@@ -128,15 +128,30 @@ export default function Home() {
       <Head>
         <title>Bcc Student Searcher</title>
       </Head>
+      <Script
+          src="https://kit.fontawesome.com/955d8ce723.js"
+          crossorigin="anonymous"
+        ></Script>
       <div className="marquee center">
         <h2>BCC Student Searcher</h2>
         <center>
           <label>Forget your friends? No worries we got you!</label>
         </center>
-        <center><Turnstile ref={ref} siteKey={config.cf_siteKey} onSuccess={(token) => (setCftunnel(token))} options={{ size: (verifying ? "normal" : "invisible") }} /></center>
+        <center>
+          <Turnstile
+            ref={ref}
+            siteKey={config.cf_siteKey}
+            onSuccess={(token) => setCftunnel(token)}
+            options={{ size: verifying ? "normal" : "invisible" }}
+          />
+        </center>
         <div className={styles.btnContainer}>
-          <button className={styles.button} onClick={handleStartButton} disabled={verifying}>
-            {verifying ? 'Verifying...' : 'Start Searching'}
+          <button
+            className={styles.button}
+            onClick={handleStartButton}
+            disabled={verifying}
+          >
+            {verifying ? "Verifying..." : "Start Searching"}
           </button>
           <button className={styles.button} onClick={handleFAQButton}>
             FAQ
@@ -145,6 +160,35 @@ export default function Home() {
             Data removal request
           </button>
         </div>
+      </div>
+      <div className="bottom fotter">
+        <center>
+          <label>
+            Developed by <a href="https://phatlor.me">Phat L</a>
+          </label>
+          <br />
+          <label>
+            {" "}
+            <a href="https://github.com/EpicCatto/BCC-Student-Searcher-V2#readme">
+              open-source on github
+            </a>{" "}
+          </label>
+          {/* github logo*/}
+          <a
+            href="https://github.com/EpicCatto/BCC-Student-Searcher-V2#readme"
+            target="_blank"
+            className="github"
+          >
+            <i class="fab fa-github" aria-hidden="true"></i>
+          </a>
+          <br />
+          <label>
+            Protected under{" "}
+            <a href="https://github.com/EpicCatto/BCC-Student-Searcher-V2#license">
+              GPL-3.0 license
+            </a>
+          </label>
+        </center>
       </div>
       <ToastContainer />
     </>

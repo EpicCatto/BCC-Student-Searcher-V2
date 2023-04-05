@@ -7,9 +7,23 @@ body {
   background-color: #222222;
 }
 
+a {
+  color: #ffffff;
+  transition: 1s;
+}
+
+a:hover {
+  color: #27c2ff;
+}
+
 .marquee{
   font-size: 26px;
   animation: marquee 10s linear infinite;
+}
+
+.footer{
+  font-size: 12px;
+  text-align: center;
 }
 
 .center{
@@ -20,4 +34,14 @@ body {
   -ms-transform: translateX(-50%) translateY(-50%);
   -webkit-transform: translate(-50%,-50%);
   transform: translate(-50%,-50%);
+}
+
+.bottom{
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
 }
